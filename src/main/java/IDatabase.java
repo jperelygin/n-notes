@@ -8,5 +8,5 @@ public interface IDatabase {
 
     ArrayList<Note> getLastNotes(int number);
 
-    ArrayList<String> getContents(int number);//TODO: normal name
+    ArrayList<String> getContents(int number);
 }

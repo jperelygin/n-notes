@@ -1,9 +1,11 @@
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
 
 public class Database implements IDatabase {
 
@@ -103,20 +105,23 @@ public class Database implements IDatabase {
         return contents;
     }
 
+
     private void getSQLAdress(){
         // Read from resource file
         try{
-            String fileName = "DatabaseAddress.txt"; //TODO: Try to avoid this! Refactor! It is not secure
+            String configName = "config.json";
             ClassLoader classLoader = ClassLoader.getSystemClassLoader();
-            File file = new File(classLoader.getResource(fileName).getFile());
-            FileReader fr = new FileReader(file);
-            SQL_ADRESS = new BufferedReader(fr).readLine(); //TODO: Refactor into xml with tags! Or json config
+            File config = new File(classLoader.getResource(configName).getFile());
+            Gson gson = new Gson();
+            JsonObject json = gson.fromJson(new FileReader(config), JsonObject.class);
+            SQL_ADRESS = json.get("Address").toString();// TODO: Fix problem with \" at the start and end of returning string
         }catch (IOException e){
             e.printStackTrace();
         }catch (NullPointerException e){
             e.printStackTrace();
         }
     }
+
 
     private Connection makeConnection(){
         Connection connection = null;
