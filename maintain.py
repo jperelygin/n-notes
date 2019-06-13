@@ -94,6 +94,8 @@ class N_Installer:
     JAVA_FILE = JAVA_PATH + "/Main.java"
 
     def create_n(self, java_file):
+        # TODO: refactor this!
+        # Not usefull anymore. Need to fix into mvn script
         r = shell(f"javac -d {self.TARGET_PATH}/{self.JAVA_FILE}")
         if r != 0:
             print(f"{self.JAVA_FILE} is not compiled !!!")
@@ -128,17 +130,19 @@ class N_Installer:
         n_path = self.NPATH + "/n"
         with open(n_path, "w+") as n:
             n.write("#!/bin/bash\n")
-            n.write(f"java {self.TARGET_PATH}Main")
+            n.write(f"java -jar {self.NPATH}/target/n-1.jar") # "Works after mvn clean package" and renaming n-1.jar into n.jar
         shell(f"chmod +x {n_path}")
-        r = shell(f"mv {n_path} /usr/local/bin/")
-        # Error: Could not find or load main class .Users.ivanperelygin.Desktop.JavaPractice.n.target.classes.Main
-        # Caused by: java.lang.ClassNotFoundException: /Users/ivanperelygin/Desktop/JavaPractice/n/target/classes/Main
-        if r != 0:
-            print(f"'N' file is not linked in {n_path}")
-        else:
-            print(f"---{n_path} is now linked in /usr/bin")
+        shell(f"mv {n_path} /usr/local/bin/")
 
+
+def maintain():
+    #main function that would build everything
+    n = N_Installer()
+    n.create_sqlite_db()
+    n.create_resource_json()
+    n.create_n_script()
+    p = Plist()
+    # m(p.maintain()) deal with it later
 
 if __name__ == "__main__":
-    n = N_Installer()
-    n.create_n_script()
+    maintain()

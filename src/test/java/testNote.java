@@ -1,5 +1,5 @@
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Assertions;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -14,7 +14,7 @@ public class testNote {
         System.out.print(note.getDate());
         DateFormat df = new SimpleDateFormat();
         Date date = new Date();
-        Assertions.assertEquals(df.format(date), note.getDate());
+        Assert.assertEquals(df.format(date), note.getDate());
     }
 
 }

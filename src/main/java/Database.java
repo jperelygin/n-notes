@@ -124,6 +124,8 @@ public class Database implements IDatabase {
 
 
     private Connection makeConnection(){
+        //this.SQL_ADRESS = "/Users/ivanperelygin/Desktop/JavaPractice/n/Notes.db";//HARDCODING! But there is still problems with gson and sql
+        getSQLAdress(); // Problem with dependencies in mvn package
         Connection connection = null;
         try{
             String url = "jdbc:sqlite:" + SQL_ADRESS;
