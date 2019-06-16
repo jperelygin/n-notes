@@ -94,7 +94,6 @@ class N_Installer:
     JAVA_FILE = JAVA_PATH + "/Main.java"
 
     def create_n(self, java_file):
-        # TODO: refactor this!
         # Not usefull anymore. Need to fix into mvn script
         r = shell(f"javac -d {self.TARGET_PATH}/{self.JAVA_FILE}")
         if r != 0:
@@ -119,7 +118,7 @@ class N_Installer:
         print(f"---Database {self.NPATH}/Notes.db is initialised!")
 
     def create_resource_json(self):
-        config_file = self.RESOURCES_PATH + "/config.json"
+        config_file = self.NPATH + "/config.json"
         shell(f"touch {config_file}")
         with open(config_file, "w+") as jsn:
             address = self.NPATH + "/Notes.db"
@@ -130,19 +129,28 @@ class N_Installer:
         n_path = self.NPATH + "/n"
         with open(n_path, "w+") as n:
             n.write("#!/bin/bash\n")
-            n.write(f"java -jar {self.NPATH}/target/n-1.jar") # "Works after mvn clean package" and renaming n-1.jar into n.jar
-        shell(f"chmod +x {n_path}")
+            n.write(f"java -jar {self.NPATH}/n-1.jar") # "Works after mvn clean package" and renaming n-1.jar into n.jar
+        shell(f"chmod +x {n_path}")§
         shell(f"mv {n_path} /usr/local/bin/")
 
 
-def maintain():
-    #main function that would build everything
-    n = N_Installer()
-    n.create_sqlite_db()
-    n.create_resource_json()
-    n.create_n_script()
+def maintain(n_installer: N_Installer):
+    # main function that would build everything
+    n_installer.create_sqlite_db()
+    n_installer.create_resource_json()
+    n_installer.create_n_script()
     p = Plist()
-    # m(p.maintain()) deal with it later
+    # p.maintain() deal with it later
+
+
+def install():
+    # Using for installing into /usr/local/n
+    n = N_Installer()
+    #shell(f"mkdir /usr/local/n")
+    shell(f"cp -r {n.NPATH}/ /usr/local/n")
+    n.NPATH = "/usr/local/n"
+    maintain(n)
+
 
 if __name__ == "__main__":
-    maintain()
+    install()

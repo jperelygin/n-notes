@@ -111,6 +111,11 @@ public class Database implements IDatabase {
         try{
             String configName = "config.json";
             ClassLoader classLoader = ClassLoader.getSystemClassLoader();
+            //TODO: New way to get resources. I guess hardcode the path to it
+            //java.io.FileNotFoundException:
+            // file:/Users/ivanperelygin/Desktop/JavaPractice/n/target/n-jar-with-dependencies.jar!/config.json
+            // (No such file or directory)
+            // Need to install all in one directory to use global variable!!
             File config = new File(classLoader.getResource(configName).getFile());
             Gson gson = new Gson();
             JsonObject json = gson.fromJson(new FileReader(config), JsonObject.class);
@@ -124,8 +129,7 @@ public class Database implements IDatabase {
 
 
     private Connection makeConnection(){
-        //this.SQL_ADRESS = "/Users/ivanperelygin/Desktop/JavaPractice/n/Notes.db";//HARDCODING! But there is still problems with gson and sql
-        getSQLAdress(); // Problem with dependencies in mvn package
+        getSQLAdress(); // Problem with dependencies in mvn package solved with mvn n.pom file configuration and mvn plugin
         Connection connection = null;
         try{
             String url = "jdbc:sqlite:" + SQL_ADRESS;
